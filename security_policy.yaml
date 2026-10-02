@@ -1,0 +1,36 @@
+# Security policy for all AI agents — single source of truth
+rate_limit:
+  window_seconds: 60
+  max_calls: 10
+
+actions:
+  payment:
+    human_approval_threshold: 100000   # USD — above this, human MUST approve
+    requires_human_approval: true
+  crm_write:
+    human_approval_threshold: 50000
+  email_send:
+    human_approval_threshold: null
+    requires_human_approval: false
+  file_delete:
+    deny: true                         # never let an agent delete files
+  access_grant:
+    deny: true                         # never let an agent grant access
+
+vendors:
+  acme-llm:
+    approved: true
+    pinned_version: "2026-09-1"
+    read_only_scopes: ["docs:read", "search:read"]
+    allow_write: false
+  third-party-search:
+    approved: true
+    read_only_scopes: ["web:read"]
+    allow_write: false
+  local_only_decisions: ["payment", "contract", "access_grant"]
+
+regions:
+  allowed: ["us-east", "eu-west"]
+
+trusted_sources:
+  hosts: ["erp.internal.company.com", "crm.company.com", "hris.company.com"]
